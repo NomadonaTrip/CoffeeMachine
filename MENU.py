@@ -30,3 +30,9 @@ resources = {
     "milk": 200,
     "coffee": 100,
 }
+
+units = {
+    "water": "ml",
+    "milk": "ml",
+    "coffee": "g",
+}
