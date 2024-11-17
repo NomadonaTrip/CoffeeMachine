@@ -1,9 +1,27 @@
 from MENU import MENU
 from MENU import resources
 from MENU import units
-from debug_coffeemachine import choice
 
 money = 0
+
+def payment():
+    """This function collects coins (pennies, nickels, dimes and quarters) and returns the value of the
+    collected coins"""
+    print("Please insert coins")
+    received = int(input("How many pennies? ")) *0.01
+    #print(f"{received} received")
+    received += int(input("How many nickels? ")) * 0.05
+    #print(f"{received} received")
+    received += int(input("How many dimes? ")) * 0.10
+    #print(f"{received} received")
+    received += int(input("How many quarters? ")) * 0.25
+    print(f"${received} received" )
+    return received
+
+def notsufficient(resources, choice):
+    for resource in resources:
+        if MENU[choice]["ingredients"][resource] > resources[resource]:
+            return True
 
 
 
@@ -12,6 +30,7 @@ while coffee_active == True:
     choice = input("What would you like? Espresso, latte or cappuccino? ")
     """This section triggers takes in the word 'off' as an input and returns a False value for coffee_active
     to turn off the coffee machine"""
+
     if choice == "off":
         coffee_active = False
     elif choice == "report":
@@ -20,7 +39,33 @@ while coffee_active == True:
         print(f"Coffee: {resources['coffee']}g")
         print(f"Money:${money}")
     elif choice == "espresso" or choice == "latte" or choice == "cappuccino":
-        print(f"{"choice"} is a great choice!")
+        print(f"{choice} is a great choice!")
+        insufficient = notsufficient(resources, choice)
+
+
+
+        if insufficient:
+            for resource in resources:
+                if MENU[choice]["ingredients"][resource] > resources[resource]:
+                    print(f"Sorry, there is not enough {resource}")
+        else:
+            userpay = payment()
+            if userpay < MENU[choice]["cost"]:
+                print(f"Sorry, that's not enough money.${userpay} refunded.")
+            elif userpay >= MENU[choice]["cost"]:
+                money += MENU[choice]["cost"]
+                change = round(userpay - MENU[choice]["cost"],2)
+                for resource in resources:
+                    resources[resource] -= MENU[choice]["ingredients"][resource]
+                print(f"Here's your {choice}, enjoy!")
+                if change != 0:
+                    print(f"Here's ${change} in change")
+
+
+
+
+
+
 
 
 
